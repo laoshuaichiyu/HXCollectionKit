@@ -21,6 +21,20 @@ public enum HXCollectionLayoutFactory {
         }
     }
 
+
+    public static func makeListLayout(
+        configuration: HXCollectionLayoutConfiguration.List = .init(),
+        trailingSwipeActionsConfigurationProvider: @escaping UICollectionLayoutListConfiguration.SwipeActionsConfigurationProvider
+    ) -> UICollectionViewCompositionalLayout {
+        var listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        listConfiguration.showsSeparators = configuration.showsSeparators
+        listConfiguration.trailingSwipeActionsConfigurationProvider = trailingSwipeActionsConfigurationProvider
+
+        let layout = UICollectionViewCompositionalLayout.list(using: listConfiguration)
+        layout.configuration.contentInsetsReference = .automatic
+        return layout
+    }
+
     private static func makeListLayout(
         configuration: HXCollectionLayoutConfiguration.List
     ) -> UICollectionViewCompositionalLayout {

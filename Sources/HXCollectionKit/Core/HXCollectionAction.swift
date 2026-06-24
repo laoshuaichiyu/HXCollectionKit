@@ -13,4 +13,21 @@ public enum HXCollectionAction<Item: HXItem>: Hashable, Sendable {
     case didEndDisplay(Item)
     case prefetch([Item])
     case reload
+
+    case delete(Item)
+    case insert(after: Item?)
+    case duplicate(Item)
+    case rename(Item)
+    case move(Item, from: HXCollectionIndexPath?, to: HXCollectionIndexPath)
+}
+
+/// Sendable index path representation used by actions crossing the ViewModel boundary.
+public struct HXCollectionIndexPath: Hashable, Sendable {
+    public var item: Int
+    public var section: Int
+
+    public init(item: Int, section: Int) {
+        self.item = item
+        self.section = section
+    }
 }

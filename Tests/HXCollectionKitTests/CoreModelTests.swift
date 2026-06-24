@@ -27,9 +27,16 @@ private struct TestItem: HXDefaultCellContent {
 
 @Test func actionIsHashableAndSendableFriendly() {
     let item = TestItem(id: 1, title: "Hello", subtitle: nil, imageSystemName: nil)
-    let actions: Set<HXCollectionAction<TestItem>> = [.didSelect(item), .reload]
+    let actions: Set<HXCollectionAction<TestItem>> = [
+        .didSelect(item),
+        .delete(item),
+        .move(item, from: nil, to: HXCollectionIndexPath(item: 0, section: 0)),
+        .reload
+    ]
 
     #expect(actions.contains(.didSelect(item)))
+    #expect(actions.contains(.delete(item)))
+    #expect(actions.contains(.move(item, from: nil, to: HXCollectionIndexPath(item: 0, section: 0))))
     #expect(actions.contains(.reload))
 }
 

@@ -15,10 +15,11 @@ final class RootViewController: UIViewController {
 
     private lazy var collectionView = UICollectionView(
         frame: .zero,
-        collectionViewLayout: HXCollectionLayoutFactory.makeLayout(style: currentLayoutStyle)
+        collectionViewLayout: makeLayout(for: currentLayoutStyle)
     )
 
     private var dataSource: HXCollectionDataSource<ExampleSection, ExampleItem>?
+    private var interactionCoordinator: HXCollectionInteractionCoordinator<ExampleSection, ExampleItem>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,16 +46,39 @@ final class RootViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
-        dataSource = HXCollectionDataSource(collectionView: collectionView)
+        let dataSource = HXCollectionDataSource<ExampleSection, ExampleItem>(collectionView: collectionView)
+        self.dataSource = dataSource
+
+        let interactionCoordinator = HXCollectionInteractionCoordinator<ExampleSection, ExampleItem>(
+            collectionView: collectionView,
+            itemResolver: { [weak dataSource] indexPath in
+                dataSource?.itemIdentifier(for: indexPath)
+            },
+            actionHandler: { [weak self] action in
+                self?.send(action)
+            }
+        )
+        interactionCoordinator.bind()
+        self.interactionCoordinator = interactionCoordinator
     }
 
     private func bindViewModel() {
         Task { [weak self] in
-            guard let self else { return }
-
-            let state = await viewModel.state
-            dataSource?.apply(state: state, animatingDifferences: false)
+            await self?.renderState(animatingDifferences: false)
         }
+    }
+
+    private func send(_ action: HXCollectionAction<ExampleItem>) {
+        Task { [weak self] in
+            guard let self else { return }
+            await viewModel.send(action)
+            await renderState(animatingDifferences: true)
+        }
+    }
+
+    private func renderState(animatingDifferences: Bool) async {
+        let state = await viewModel.state
+        dataSource?.apply(state: state, animatingDifferences: animatingDifferences)
     }
 
     @objc private func layoutControlValueChanged(_ sender: UISegmentedControl) {
@@ -75,7 +99,29 @@ final class RootViewController: UIViewController {
         }
 
         currentLayoutStyle = style
-        let layout = HXCollectionLayoutFactory.makeLayout(style: style)
-        collectionView.setCollectionViewLayout(layout, animated: animated)
+        collectionView.setCollectionViewLayout(makeLayout(for: style), animated: animated)
+    }
+
+    private func makeLayout(for style: HXCollectionLayoutStyle) -> UICollectionViewCompositionalLayout {
+        switch style {
+        case .list:
+            return HXCollectionLayoutFactory.makeListLayout { [weak self] indexPath in
+                guard let item = self?.dataSource?.itemIdentifier(for: indexPath) else {
+                    return nil
+                }
+
+                let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
+                    self?.send(.delete(item))
+                    completion(true)
+                }
+                delete.image = UIImage(systemName: "trash")
+                return UISwipeActionsConfiguration(actions: [delete])
+            }
+        case .grid, .card:
+            // Standard compositional grid/card sections do not provide list-cell
+            // trailing swipe APIs. Deletion for these layouts is available via
+            // ContextMenu so the data flow remains the same.
+            return HXCollectionLayoutFactory.makeLayout(style: style)
+        }
     }
 }
