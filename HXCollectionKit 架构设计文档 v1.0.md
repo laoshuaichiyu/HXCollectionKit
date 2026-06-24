@@ -1,31 +1,3 @@
-我非常赞同先做架构文档，而且这是我们整个项目最重要的一步。
-
-不过，我先纠正一下我们前面讨论中的一个方向。
-
-我们之前一直参考的是”大厂风格”。
-
-但是如果目标是做一个以后几年都能一直维护的 UIKit Collection 框架，Apple Framework 的设计比国内大厂更值得参考。
-
-例如：
-
-* AVFoundation
-* CoreData
-* Combine
-* SwiftUI
-* UICollectionViewDiffableDataSource
-
-它们都有几个共同特点：
-
-* 泛型优先，而不是业务模型优先。
-* Protocol 优先，而不是继承优先。
-* Coordinator 负责协调，不负责业务。
-* Builder 负责创建，不负责生命周期。
-* Event 与 State 分离。
-
-所以，我准备把整个框架重新设计成Apple Framework 风格，同时保持 MVVM 易用性。
-
-⸻
-
 HXCollectionKit v1.0 架构设计文档
 
 一、设计目标
@@ -520,18 +492,3 @@ coordinator.onEvent = { event in
 }
 
 业务代码无需直接接触 UICollectionViewDiffableDataSource、CellRegistration、UICollectionViewDelegate 等底层细节。
-
-⸻
-
-我建议的下一步
-
-不要先写 CollectionCoordinator。
-
-正确顺序应该是：
-
-1. 定义所有公共协议（Protocols）
-2. 定义所有公共类型（Event、Environment、Configuration）
-3. 定义 CollectionCoordinator 对外 API
-4. 最后才实现 CollectionCoordinator
-
-这样 Core 层的 API 会稳定，后面的实现基本不会返工。这也是苹果框架和成熟开源库常用的开发方式。
