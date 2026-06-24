@@ -4,10 +4,18 @@ import UIKit
 @MainActor
 final class RootViewController: UIViewController {
     private let viewModel = ExampleCollectionViewModel()
+    private var currentLayoutStyle: HXCollectionLayoutStyle = .list
+
+    private lazy var layoutControl: UISegmentedControl = {
+        let control = UISegmentedControl(items: HXCollectionLayoutStyle.allCases.map(\.rawValue.capitalized))
+        control.selectedSegmentIndex = HXCollectionLayoutStyle.allCases.firstIndex(of: currentLayoutStyle) ?? 0
+        control.addTarget(self, action: #selector(layoutControlValueChanged), for: .valueChanged)
+        return control
+    }()
 
     private lazy var collectionView = UICollectionView(
         frame: .zero,
-        collectionViewLayout: Self.makeLayout()
+        collectionViewLayout: HXCollectionLayoutFactory.makeLayout(style: currentLayoutStyle)
     )
 
     private var dataSource: HXCollectionDataSource<ExampleSection, ExampleItem>?
@@ -17,8 +25,13 @@ final class RootViewController: UIViewController {
 
         title = "HXCollectionKit"
         view.backgroundColor = .systemBackground
+        configureNavigationItem()
         configureCollectionView()
         bindViewModel()
+    }
+
+    private func configureNavigationItem() {
+        navigationItem.titleView = layoutControl
     }
 
     private func configureCollectionView() {
@@ -44,9 +57,25 @@ final class RootViewController: UIViewController {
         }
     }
 
-    private static func makeLayout() -> UICollectionViewCompositionalLayout {
-        var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-        configuration.showsSeparators = true
-        return UICollectionViewCompositionalLayout.list(using: configuration)
+    @objc private func layoutControlValueChanged(_ sender: UISegmentedControl) {
+        let styles = HXCollectionLayoutStyle.allCases
+        guard styles.indices.contains(sender.selectedSegmentIndex) else {
+            return
+        }
+
+        setLayoutStyle(styles[sender.selectedSegmentIndex], animated: true)
+    }
+
+    private func setLayoutStyle(
+        _ style: HXCollectionLayoutStyle,
+        animated: Bool
+    ) {
+        guard style != currentLayoutStyle else {
+            return
+        }
+
+        currentLayoutStyle = style
+        let layout = HXCollectionLayoutFactory.makeLayout(style: style)
+        collectionView.setCollectionViewLayout(layout, animated: animated)
     }
 }

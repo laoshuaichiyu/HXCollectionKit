@@ -40,3 +40,13 @@ private struct TestItem: HXDefaultCellContent {
     #expect(item.subtitle == "Subtitle")
     #expect(item.imageSystemName == "photo")
 }
+
+@Test func layoutStylesExposeDefaultConfigurations() {
+    #expect(HXCollectionLayoutStyle.allCases == [.list, .grid, .card])
+
+    let grid = HXCollectionLayoutConfiguration.Grid(columns: 0)
+    #expect(grid.columns == 1)
+
+    let card = HXCollectionLayoutConfiguration.Card(groupWidthFraction: 2.0)
+    #expect(card.groupWidthFraction == 1.0)
+}
