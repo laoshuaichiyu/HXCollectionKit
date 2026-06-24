@@ -48,6 +48,70 @@ private struct TestItem: HXDefaultCellContent {
     #expect(item.imageSystemName == "photo")
 }
 
+@Test func stateInsertAddsItemAtRequestedIndex() {
+    let section = TestSection(id: "main")
+    let first = TestItem(id: 1, title: "First", subtitle: nil, imageSystemName: nil)
+    let second = TestItem(id: 2, title: "Second", subtitle: nil, imageSystemName: nil)
+    var state = HXCollectionState<TestSection, TestItem>(sections: [section])
+
+    state.insert(first, in: section)
+    state.insert(second, in: section, at: 0)
+
+    #expect(state[section] == [second, first])
+}
+
+@Test func stateDeleteRemovesExistingItem() {
+    let section = TestSection(id: "main")
+    let first = TestItem(id: 1, title: "First", subtitle: nil, imageSystemName: nil)
+    let second = TestItem(id: 2, title: "Second", subtitle: nil, imageSystemName: nil)
+    var state = HXCollectionState(
+        sections: [section],
+        itemsBySection: [section: [first, second]]
+    )
+
+    state.delete(first)
+
+    #expect(state[section] == [second])
+}
+
+@Test func stateMoveSupportsCrossSectionDestination() {
+    let firstSection = TestSection(id: "first")
+    let secondSection = TestSection(id: "second")
+    let first = TestItem(id: 1, title: "First", subtitle: nil, imageSystemName: nil)
+    let second = TestItem(id: 2, title: "Second", subtitle: nil, imageSystemName: nil)
+    var state = HXCollectionState(
+        sections: [firstSection, secondSection],
+        itemsBySection: [
+            firstSection: [first],
+            secondSection: [second]
+        ]
+    )
+
+    state.move(first, to: HXCollectionIndexPath(item: 1, section: 1))
+
+    #expect(state[firstSection].isEmpty)
+    #expect(state[secondSection] == [second, first])
+}
+
+@Test func snapshotBuilderPreservesSectionAndItemOrder() {
+    let firstSection = TestSection(id: "first")
+    let secondSection = TestSection(id: "second")
+    let first = TestItem(id: 1, title: "First", subtitle: nil, imageSystemName: nil)
+    let second = TestItem(id: 2, title: "Second", subtitle: nil, imageSystemName: nil)
+    let state = HXCollectionState(
+        sections: [firstSection, secondSection],
+        itemsBySection: [
+            firstSection: [first],
+            secondSection: [second]
+        ]
+    )
+
+    let snapshot = HXSnapshotBuilder.makeSnapshot(from: state)
+
+    #expect(snapshot.sectionIdentifiers == [firstSection, secondSection])
+    #expect(snapshot.itemIdentifiers == [first, second])
+}
+
 @Test func layoutStylesExposeDefaultConfigurations() {
     #expect(HXCollectionLayoutStyle.allCases == [.list, .grid, .card])
 

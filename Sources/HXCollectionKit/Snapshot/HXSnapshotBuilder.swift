@@ -1,5 +1,4 @@
-#if canImport(UIKit)
-import UIKit
+import Foundation
 
 /// Builds the framework's unified diffable snapshot from UI-independent state.
 public enum HXSnapshotBuilder {
@@ -16,4 +15,3 @@ public enum HXSnapshotBuilder {
         return snapshot
     }
 }
-#endif

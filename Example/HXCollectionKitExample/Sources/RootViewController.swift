@@ -33,6 +33,12 @@ final class RootViewController: UIViewController {
 
     private func configureNavigationItem() {
         navigationItem.titleView = layoutControl
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            systemItem: .add,
+            primaryAction: UIAction { [weak self] _ in
+                self?.send(.insert(after: nil))
+            }
+        )
     }
 
     private func configureCollectionView() {
