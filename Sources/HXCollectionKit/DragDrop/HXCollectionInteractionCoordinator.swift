@@ -80,8 +80,8 @@ public final class HXCollectionInteractionCoordinator<Section: HXSection, Item: 
 
         coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
         actionHandler(
-            HXCollectionInteractionActionMapper.dragMove(
-                item: payload.item,
+            .move(
+                payload.item,
                 from: payload.sourceIndexPath.hxIndexPath,
                 to: destinationIndexPath.hxIndexPath
             )
@@ -101,20 +101,20 @@ public final class HXCollectionInteractionCoordinator<Section: HXSection, Item: 
             guard let self else { return nil }
 
             let insert = UIAction(title: "Insert", image: UIImage(systemName: "plus")) { [weak self] _ in
-                Task { @MainActor in self?.actionHandler(HXCollectionInteractionActionMapper.contextInsert(after: item)) }
+                Task { @MainActor in self?.actionHandler(.insert(after: item)) }
             }
             let copy = UIAction(title: "Copy", image: UIImage(systemName: "doc.on.doc")) { [weak self] _ in
-                Task { @MainActor in self?.actionHandler(HXCollectionInteractionActionMapper.contextDuplicate(item: item)) }
+                Task { @MainActor in self?.actionHandler(.duplicate(item)) }
             }
             let rename = UIAction(title: "Rename", image: UIImage(systemName: "pencil")) { [weak self] _ in
-                Task { @MainActor in self?.actionHandler(HXCollectionInteractionActionMapper.contextRename(item: item)) }
+                Task { @MainActor in self?.actionHandler(.rename(item)) }
             }
             let delete = UIAction(
                 title: "Delete",
                 image: UIImage(systemName: "trash"),
                 attributes: .destructive
             ) { [weak self] _ in
-                Task { @MainActor in self?.actionHandler(HXCollectionInteractionActionMapper.contextDelete(item: item)) }
+                Task { @MainActor in self?.actionHandler(.delete(item)) }
             }
 
             return UIMenu(children: [insert, copy, rename, delete])
