@@ -1,7 +1,9 @@
 import Foundation
 import HXCollectionKit
 
+
 enum ExampleSection: String, HXSection {
+
     case main
     case secondary
 

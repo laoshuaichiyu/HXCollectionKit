@@ -2,7 +2,9 @@
 import UIKit
 
 /// Factory for UIKit compositional layouts used by HXCollectionKit.
+
 @MainActor
+
 public enum HXCollectionLayoutFactory {
     public static func makeLayout(
         style: HXCollectionLayoutStyle,

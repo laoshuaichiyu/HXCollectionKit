@@ -9,6 +9,7 @@ Example/           # UIKit demo app consuming HXCollectionKit as a local package
 
 ## Use HXCollectionKit via SPM
 
+
 Add the `HXCollectionKit` package directory or this repository URL in Xcode's Swift Package manager flow. The package manifest lives at:
 
 ```text
@@ -24,7 +25,9 @@ The package exposes one library product:
 ## Run Tests
 
 ```bash
+
 cd HXCollectionKit
+
 swift test
 ```
 
@@ -42,4 +45,5 @@ The example app references the sibling local package at `../HXCollectionKit`, mi
 
 - Package README: `HXCollectionKit/README.md`
 - Architecture: `HXCollectionKit/Architecture.md`
+
 - Original design document: `HXCollectionKit 架构设计文档 v1.0.md`
