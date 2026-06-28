@@ -16,7 +16,7 @@ let package = Package(
     targets: [
         .target(
             name: "HXCollectionKit",
-            path: "HXCollectionKit/Sources/HXCollectionKit"
+            path: "Sources"
         ),
         .testTarget(
             name: "HXCollectionKitTests",

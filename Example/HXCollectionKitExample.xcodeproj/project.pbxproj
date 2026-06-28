@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		32EDD0D02FF0A8F000B88C0E /* HXCollectionKit in Frameworks */ = {isa = PBXBuildFile; productRef = 32EDD0CF2FF0A8F000B88C0E /* HXCollectionKit */; };
 		A10000000000000000000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* AppDelegate.swift */; };
 		A10000000000000000000002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000012 /* SceneDelegate.swift */; };
 		A10000000000000000000003 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000013 /* RootViewController.swift */; };
-		A10000000000000000000004 /* HXCollectionKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000031 /* HXCollectionKit */; };
 		A10000000000000000000005 /* ExampleCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000014 /* ExampleCollectionViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,7 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A10000000000000000000004 /* HXCollectionKit in Frameworks */,
+				32EDD0D02FF0A8F000B88C0E /* HXCollectionKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,7 +77,7 @@
 			);
 			name = HXCollectionKitExample;
 			packageProductDependencies = (
-				A10000000000000000000031 /* HXCollectionKit */,
+				32EDD0CF2FF0A8F000B88C0E /* HXCollectionKit */,
 			);
 			productName = HXCollectionKitExample;
 			productReference = A10000000000000000000010 /* HXCollectionKitExample.app */;
@@ -108,7 +108,7 @@
 			);
 			mainGroup = A10000000000000000000021;
 			packageReferences = (
-				A10000000000000000000030 /* XCLocalSwiftPackageReference "../HXCollectionKit" */,
+				32EDD0CE2FF0A8F000B88C0E /* XCLocalSwiftPackageReference "../../HXCollectionKit" */,
 			);
 			productRefGroup = A10000000000000000000023 /* Products */;
 			projectDirPath = "";
@@ -307,16 +307,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A10000000000000000000030 /* XCLocalSwiftPackageReference "../HXCollectionKit" */ = {
+		32EDD0CE2FF0A8F000B88C0E /* XCLocalSwiftPackageReference "../../HXCollectionKit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../HXCollectionKit;
+			relativePath = ../../HXCollectionKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A10000000000000000000031 /* HXCollectionKit */ = {
+		32EDD0CF2FF0A8F000B88C0E /* HXCollectionKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A10000000000000000000030 /* XCLocalSwiftPackageReference "../HXCollectionKit" */;
 			productName = HXCollectionKit;
 		};
 /* End XCSwiftPackageProductDependency section */
