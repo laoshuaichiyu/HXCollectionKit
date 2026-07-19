@@ -36,9 +36,7 @@ final class RootViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             systemItem: .add,
             primaryAction: UIAction { [weak self] _ in
-                Task { @MainActor in
-                    await self?.send(.insert(after: nil))
-                }
+                self?.send(.insert(after: nil))
             }
         )
     }
@@ -63,7 +61,7 @@ final class RootViewController: UIViewController {
                 dataSource?.itemIdentifier(for: indexPath)
             },
             actionHandler: { [weak self] action in
-                await self?.send(action)
+                self?.send(action)
             }
         )
         interactionCoordinator.bind()
@@ -71,23 +69,21 @@ final class RootViewController: UIViewController {
     }
 
     private func bindViewModel() {
-        Task { [weak self] in
-            await self?.renderState(animatingDifferences: false)
-        }
+        self.renderState(animatingDifferences: false)
     }
 
-    private func send(_ action: HXCollectionAction<ExampleItem>) async {
-        await viewModel.send(action)
+    private func send(_ action: HXCollectionAction<ExampleItem>) {
+        viewModel.send(action)
 
         if case .move = action {
-            await renderState(animatingDifferences: false)
+            renderState(animatingDifferences: false)
         } else {
-            await renderState(animatingDifferences: true)
+            renderState(animatingDifferences: true)
         }
     }
 
-    private func renderState(animatingDifferences: Bool) async {
-        let state = await viewModel.state
+    private func renderState(animatingDifferences: Bool) {
+        let state = viewModel.state
         dataSource?.apply(state: state, animatingDifferences: animatingDifferences)
     }
 
@@ -121,10 +117,8 @@ final class RootViewController: UIViewController {
                 }
 
                 let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
-                    Task { @MainActor in
-                        await self?.send(.delete(item))
-                        completion(true)
-                    }
+                    self?.send(.delete(item))
+                    completion(true)
                 }
                 delete.image = UIImage(systemName: "trash")
                 return UISwipeActionsConfiguration(actions: [delete])

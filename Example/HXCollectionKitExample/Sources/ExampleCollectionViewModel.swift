@@ -17,7 +17,8 @@ struct ExampleItem: HXDefaultCellContent {
     let imageSystemName: String?
 }
 
-actor ExampleCollectionViewModel: HXCollectionViewModelProtocol {
+@MainActor
+class ExampleCollectionViewModel: @MainActor HXCollectionViewModelProtocol {
     private var currentState: HXCollectionState<ExampleSection, ExampleItem>
 
     init() {
@@ -63,10 +64,10 @@ actor ExampleCollectionViewModel: HXCollectionViewModelProtocol {
     }
 
     var state: HXCollectionState<ExampleSection, ExampleItem> {
-        get async { currentState }
+        get { currentState }
     }
 
-    func send(_ action: HXCollectionAction<ExampleItem>) async {
+    func send(_ action: HXCollectionAction<ExampleItem>) {
         switch action {
         case .delete(let item), .didDelete(let item):
             delete(item)

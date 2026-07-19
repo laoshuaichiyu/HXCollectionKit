@@ -12,7 +12,7 @@ public final class HXCollectionInteractionCoordinator<Section: HXSection, Item: 
     UICollectionViewDropDelegate
 {
     public typealias ItemResolver = @MainActor (IndexPath) -> Item?
-    public typealias ActionHandler = @MainActor (HXCollectionAction<Item>) async -> Void
+    public typealias ActionHandler = @MainActor (HXCollectionAction<Item>) -> Void
 
     private weak var collectionView: UICollectionView?
     private let itemResolver: ItemResolver
@@ -84,10 +84,8 @@ public final class HXCollectionInteractionCoordinator<Section: HXSection, Item: 
             to: destinationIndexPath.hxIndexPath
         )
 
-        Task { @MainActor in
-            await actionHandler(action)
-            coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
-        }
+        actionHandler(action)
+        coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
     }
 
     public func collectionView(
@@ -103,20 +101,20 @@ public final class HXCollectionInteractionCoordinator<Section: HXSection, Item: 
             guard let self else { return nil }
 
             let insert = UIAction(title: "Insert", image: UIImage(systemName: "plus")) { [weak self] _ in
-                Task { @MainActor in await self?.actionHandler(HXCollectionInteractionActionMapper.contextInsert(after: item)) }
+                self?.actionHandler(HXCollectionInteractionActionMapper.contextInsert(after: item))
             }
             let copy = UIAction(title: "Copy", image: UIImage(systemName: "doc.on.doc")) { [weak self] _ in
-                Task { @MainActor in await self?.actionHandler(HXCollectionInteractionActionMapper.contextDuplicate(item: item)) }
+                self?.actionHandler(HXCollectionInteractionActionMapper.contextDuplicate(item: item))
             }
             let rename = UIAction(title: "Rename", image: UIImage(systemName: "pencil")) { [weak self] _ in
-                Task { @MainActor in await self?.actionHandler(HXCollectionInteractionActionMapper.contextRename(item: item)) }
+                self?.actionHandler(HXCollectionInteractionActionMapper.contextRename(item: item))
             }
             let delete = UIAction(
                 title: "Delete",
                 image: UIImage(systemName: "trash"),
                 attributes: .destructive
             ) { [weak self] _ in
-                Task { @MainActor in await self?.actionHandler(HXCollectionInteractionActionMapper.contextDelete(item: item)) }
+                self?.actionHandler(HXCollectionInteractionActionMapper.contextDelete(item: item))
             }
 
             return UIMenu(children: [insert, copy, rename, delete])
