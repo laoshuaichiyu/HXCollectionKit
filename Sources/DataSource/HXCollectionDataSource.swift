@@ -36,6 +36,21 @@ public final class HXCollectionDataSource<Section: HXSection, Item: HXItem> {
             )
         }
     }
+    
+    public init<Cell: UICollectionViewCell>(
+        collectionView: UICollectionView,
+        cellRegistration: @escaping () -> CellRegistration<Cell>
+    ) {
+        self.dataSource = UICollectionViewDiffableDataSource<Section, Item>(
+            collectionView: collectionView
+        ) { collectionView, indexPath, item in
+            collectionView.dequeueConfiguredReusableCell(
+                using: cellRegistration(),
+                for: indexPath,
+                item: item
+            )
+        }
+    }
 
     /// Creates a data source with a fully custom cell provider.
     ///
