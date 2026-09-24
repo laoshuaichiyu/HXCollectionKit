@@ -29,7 +29,7 @@ public enum HXCollectionLayoutFactory {
         configuration: HXCollectionLayoutConfiguration.List = .init(),
         trailingSwipeActionsConfigurationProvider: @escaping UICollectionLayoutListConfiguration.SwipeActionsConfigurationProvider
     ) -> UICollectionViewCompositionalLayout {
-        var listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        var listConfiguration = UICollectionLayoutListConfiguration(appearance: .plain)
         listConfiguration.showsSeparators = configuration.showsSeparators
         listConfiguration.trailingSwipeActionsConfigurationProvider = trailingSwipeActionsConfigurationProvider
 
